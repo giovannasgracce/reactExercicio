@@ -97,45 +97,120 @@ export default function App(){
         return setResultado
     }
 
-    function converterSegundos(segundos) {
-        if (true) {
-            return Math.floor(segundos / 3600) + "h " +
-                   Math.floor((segundos % 3600) / 60) + "min " +
-                   (segundos % 60) + "s";
+    function converterTempo() {
+        const totalSegundos = parseInt(primeiroNumero);
+    
+        if (!isNaN(totalSegundos)) {
+            const h = Math.floor(totalSegundos / 3600);
+            const m = Math.floor((totalSegundos % 3600) / 60);
+            const s = totalSegundos % 60;
+    
+            setResultado(`${h}h ${m}min ${s}s`);
+        } else {
+            setResultado("Valor inválido!");
         }
+    
+        return setResultado;
     }
+    
        
     function caixaAgua() {/*13*/
         setResultado(volume =(parseFloat(primeiroNumero) * parseFloat(segundoNumero) * parseFloat(terceiroNumero)));
         return setResultado("O volume:" + volume)
     }
 
-    function identificarPoligono() {/*14*/
-        if (parseFloat(terceiroNumero) == 3) {
-            return "Triângulo";
-        } else if (parseFloat(terceiroNumero) == 4) {
-            return "Quadrado";
-        } else if (parseFloat(terceiroNumero) == 5) {
-            return "Pentágono";
-        } else if (parseFloat(terceiroNumero) == 6) {
-            return "Hexágono";
-        } else if (parseFloat(terceiroNumero) == 7) {
-            return "Heptágono";
-        } else if (parseFloat(terceiroNumero) == 8) {
-            return "Octógono";
-        } else if (parseFloat(terceiroNumero) == 9) {
-            return "Eneágono";
-        } else if (parseFloat(terceiroNumero) == 10) {
-            return "Decágono";
+    function identificarPoligono() {/*14*/ 
+        let resultado = "";// posso mudar o valor depois
+    
+        if (parseFloat(primeiroNumero) == 3) {
+            resultado = "Triângulo";
+        } else if (parseFloat(primeiroNumero) == 4) {
+            resultado = "Quadrado";
+        } else if (parseFloat(primeiroNumero) == 5) {
+            resultado = "Pentágono";
+        } else if (parseFloat(primeiroNumero) == 6) {
+            resultado = "Hexágono";
+        } else if (parseFloat(primeiroNumero) == 7) {
+            resultado = "Heptágono";
+        } else if (parseFloat(primeiroNumero) == 8) {
+            resultado = "Octógono";
+        } else if (parseFloat(primeiroNumero) == 9) {
+            resultado = "Eneágono";
+        } else if (parseFloat(primeiroNumero) == 10) {
+            resultado = "Decágono";
         } else {
-            return "Figura não identificada";
+            resultado = "Figura não identificada";
+        }
+    
+        setResultado(resultado);
+    }
+    
+    function calcularDesconto() {/*15*/
+        let desconto = 0;
+    
+        if (parseFloat(primeiroNumero) < 100) {
+            desconto = 0.05;
+        } else if (parseFloat(primeiroNumero) >= 100 && parseFloat(primeiroNumero) <= 500) {
+            desconto = 0.10;
+        } else if (parseFloat(primeiroNumero) > 500) {
+            desconto = 0.15;
+        }
+    
+        const valorFinal = parseFloat(primeiroNumero) - (parseFloat(primeiroNumero) * desconto);
+        setResultado(`Desconto: ${desconto * 100}% | Valor com desconto: R$ ${valorFinal.toFixed(2)}`);
+    }
+    
+    function converter() {/*16*/ 
+        const c = (parseFloat(primeiroNumero) - 32) * 5 / 9;
+        setResultado("A temperatura em Fahrenheit: " + parseFloat(primeiroNumero) + "°F | A temperatura em Celsius: " + c.toFixed(2) + "°C"); //duas casas decimais após o ponto
+    }
+    
+    function inverterNumero() {
+        const numero = parseInt(primeiroNumero); 
+    
+        // Decompor o número em centenas, dezenas e unidades
+        const a = Math.floor(numero / 100); // Centena
+        const b = Math.floor((numero % 100) / 10); // Dezena
+        const c = numero % 10; // Unidade
+    
+        // Inverter a ordem e criar o número invertido
+        const numeroInvertido = 100 * c + 10 * b + a;
+    
+      
+        setResultado("Número invertido: " + numeroInvertido);
+    }
+    
+    function pagar(){
+        const total = parseFloat(primeiroNumero) * parseFloat(segundoNumero) * 1.12;
+        setResultado("Total a pagar: " + total.toFixed(2));
+    }
+
+    function arredondar() {
+        const arredondado = Math.round(parseFloat(primeiroNumero));
+        setResultado("Número arredondado: " + arredondado);
+    }
+    
+    function validarTriangulo() {
+        const a = parseFloat(primeiroNumero);
+        const b = parseFloat(segundoNumero);
+        const c = parseFloat(terceiroNumero);
+    
+        if (a + b > c && a + c > b && b + c > a) {
+            setResultado("As medidas formam um triângulo válido.");
+        } else {
+            setResultado("As medidas NÃO formam um triângulo.");
         }
     }
+    
+
+  
     
 
     function limpar(){
        setPrimeiroNumero(0);
        setSegundoNumero(0);
+       setTerceiroNumero(0);
+       setQuartoNumero(0);
        setResultado(0);
     }
 
@@ -220,7 +295,7 @@ export default function App(){
                         <Text style={styles.input}>11</Text>
                     </TouchableOpacity>
         
-                    <TouchableOpacity style={styles.botao} onPress={converterSegundos}> {/*12*/}
+                    <TouchableOpacity style={styles.botao} onPress={converterTempo}> {/*12*/}
                         <Text style={styles.input}>12</Text>
                     </TouchableOpacity>
                 </View>
@@ -232,6 +307,33 @@ export default function App(){
         
                     <TouchableOpacity style={styles.botao} onPress={identificarPoligono}> {/*14*/}
                         <Text style={styles.input}>14</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.areaBotoes}>
+                    <TouchableOpacity style={styles.botao} onPress={calcularDesconto}> {/*15*/}
+                        <Text style={styles.input}>15</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.botao} onPress={converter}> {/*16*/}
+                        <Text style={styles.input}>16</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.areaBotoes}>
+                    <TouchableOpacity style={styles.botao} onPress={inverterNumero}> {/*17*/}
+                        <Text style={styles.input}>17</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.botao} onPress={pagar}> {/*18*/}
+                        <Text style={styles.input}>18</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.areaBotoes}>
+                    <TouchableOpacity style={styles.botao} onPress={arredondar}> {/*17*/}
+                        <Text style={styles.input}>19</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.botao} onPress={validarTriangulo}> {/*18*/}
+                        <Text style={styles.input}>20</Text>
                     </TouchableOpacity>
                 </View>
                 
@@ -292,6 +394,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#e069ad",
         marginTop: 20,
         padding:20,
+        margin:200,
         alignItems:"center",
         width: "50%",
         borderRadius:100,
